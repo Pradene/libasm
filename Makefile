@@ -6,22 +6,30 @@ OBJS_DIR := objs
 NAME := libasm
 
 # Source files (just names, no paths)
-SRC_FILES := main.s
+SRC_FILES :=	main.s \
+							ft_strcpy.s \
+							ft_strlen.s
 
 # Full paths
 SRCS := $(addprefix $(SRCS_DIR)/, $(SRC_FILES))
 OBJS := $(addprefix $(OBJS_DIR)/, $(SRC_FILES:.s=.o))
+
+NASM = nasm
+NASMFLAGS = -f elf64
+LD = ld
+LDFLAGS = 
+AR = ar
 
 # Default target
 all: $(NAME)
 
 # Link object files into the final binary
 $(NAME): $(OBJS)
-	ld -m elf_i386 -o $@ $^
+	$(LD) -o $@ $^
 
 # Assemble .s into .o
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.s | $(OBJS_DIR)
-	nasm -f elf32 -o $@ $<
+	$(NASM) $(NASMFLAGS) -o $@ $<
 
 # Ensure build directory exists
 $(OBJS_DIR):
