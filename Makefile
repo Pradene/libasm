@@ -1,9 +1,6 @@
-# Directories
-SRCS_DIR := srcs
-OBJS_DIR := objs
-
 # Executable name
-LIB := libasm.a
+LIB_DIR := lib
+LIB := $(LIB_DIR)/libasm.a
 
 # Source files (just names, no paths)
 SRC_FILES :=	ft_strcpy.s \
@@ -11,42 +8,55 @@ SRC_FILES :=	ft_strcpy.s \
 							ft_strlen.s \
 							ft_strcmp.s
 
+# Directories
+SRCS_DIR := srcs
+OBJS_DIR := objs
+
 # Full paths
 SRCS := $(addprefix $(SRCS_DIR)/, $(SRC_FILES))
 OBJS := $(addprefix $(OBJS_DIR)/, $(SRC_FILES:.s=.o))
 
-TEST_SRC := test.s
+TEST_DIR := tests
+TEST_SRC := $(TEST_DIR)/test.c
 TEST_OBJ := $(OBJS_DIR)/test.o
-TEST := test
+TEST_EXE := tester
 
 NASM = nasm
 NASMFLAGS = -f elf64
-
-# ld flags for libc linking
-LD = ld
-LDFLAGS = -dynamic-linker /lib64/ld-linux-x86-64.so.2 -lc
+AR = ar
+ARFLAGS = rcs
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -g
 
 # Default target
 all: $(LIB)
 
 # Link object files into the final binary
-$(LIB): $(OBJS)
-	@ar rcs $@ $^
+$(LIB): $(OBJS) | $(LIB_DIR)
+	$(AR) $(ARFLAGS) $@ $^
 
 # Assemble .s into .o
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.s | $(OBJS_DIR)
-	$(NASM) $(NASMFLAGS) -o $@ $^
+	$(NASM) $(NASMFLAGS) -o $@ $<
 
-# Ensure build directory exists
+# Ensure build directories exist
 $(OBJS_DIR):
 	mkdir -p $@
 
-test: $(LIB) $(TEST_OBJ)
-	$(LD) $(LDFLAGS) $(OBJS) $(TEST_OBJ) -o $(TEST)
-	./$(TEST)
+$(LIB_DIR):
+	mkdir -p $@
 
-$(OBJS_DIR)/test.o: $(TEST_SRC) | $(OBJS_DIR)
-	$(NASM) $(NASMFLAGS) -o $@ $<
+# Test target - compile and run the test program
+test: $(TEST_EXE)
+	./$(TEST_EXE)
+
+# Compile the test program
+$(TEST_EXE): $(LIB) $(TEST_OBJ)
+	$(CC) $(CFLAGS) -o $@ $(TEST_OBJ) -L$(LIB_DIR) -lasm
+
+# Compile the test source file
+$(TEST_OBJ): $(TEST_SRC) | $(OBJS_DIR)
+	$(CC) $(CFLAGS) -I$(LIB_DIR) -c $< -o $@
 
 # Clean object files
 clean:
@@ -54,9 +64,9 @@ clean:
 
 # Clean binary and objects
 fclean: clean
-	rm -f $(LIB) $(TEST)
+	rm -f $(LIB) $(TEST_EXE)
 
 # Rebuild all
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re test
