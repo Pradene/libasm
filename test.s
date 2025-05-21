@@ -2,6 +2,7 @@ section .text
     global _start
     extern ft_strcpy
     extern ft_strlen
+    extern ft_strdup
 
 _start:
     ; Prepare arguments for ft_strcpy
