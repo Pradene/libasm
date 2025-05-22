@@ -66,7 +66,7 @@ clean:
 
 # Clean binary and objects
 fclean: clean
-	rm -f $(LIB) $(TEST_EXE)
+	rm -rf $(LIB_DIR) $(TEST_EXE)
 
 # Rebuild all
 re: fclean all
