@@ -20,8 +20,10 @@ OBJS := $(addprefix $(OBJS_DIR)/, $(SRC_FILES:.s=.o))
 
 # Test files
 TEST_DIR := tests
-TEST_SRC := $(TEST_DIR)/test.s
-TEST_OBJ := $(OBJS_DIR)/test.o
+TEST_FILES := strlen.s
+
+TEST_SRCS := $(addprefix $(TEST_DIR)/, $(TEST_FILES))
+TEST_OBJS := $(addprefix $(OBJS_DIR)/, $(TEST_FILES:.s=.o))
 TEST_EXE := tester
 
 # Tools and flags
@@ -55,11 +57,11 @@ test: $(TEST_EXE)
 	./$(TEST_EXE)
 
 # Link the test program (assembly + library)
-$(TEST_EXE): $(TEST_OBJ) $(LIB)
-	$(LD) $(LDFLAGS) -o $@ $(TEST_OBJ) $(LIB) -lc
+$(TEST_EXE): $(TEST_OBJS) $(LIB)
+	$(LD) $(LDFLAGS) -o $@ $(TEST_OBJS) $(LIB) -lc
 
 # Compile the test source file (assembly)
-$(TEST_OBJ): $(TEST_SRC) | $(OBJS_DIR)
+$(TEST_OBJS): $(TEST_SRCS) | $(OBJS_DIR)
 	$(NASM) $(NASMFLAGS) -o $@ $<
 
 # Clean object files
