@@ -5,6 +5,7 @@ ft_strlen:
   ; SRC = RDI
   ; Return: RAX = length
 
+  push rcx
   xor rcx, rcx ; Reset rcx
 
 .loop:
@@ -17,4 +18,5 @@ ft_strlen:
 
 .done:
   mov rax, rcx
+  pop rcx
   ret

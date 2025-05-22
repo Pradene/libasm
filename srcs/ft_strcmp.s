@@ -4,6 +4,7 @@ section .text
 ft_strcmp:
     ; S1 = RDI
     ; S2 = RSI
+    push rcx
     xor rcx, rcx        ; Initialize counter to 0
 
 .loop:
@@ -20,4 +21,5 @@ ft_strcmp:
 
 .done:
     sub rax, rbx        ; Calculate the difference
+    pop rcx
     ret

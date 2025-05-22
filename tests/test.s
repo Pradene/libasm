@@ -1,28 +1,26 @@
 section .data
     ; Test strings
     empty_str       db 0
+    empty_len       equ ($ - empty_str) - 1     ; Subtract 1 for null terminator
     short_str       db "Hi", 0
+    short_len       equ ($ - short_str) - 1     ; Subtract 1 for null terminator
     medium_str      db "Hello World", 0
+    medium_len      equ ($ - medium_str) - 1    ; Subtract 1 for null terminator
     long_str        db "This is a longer test string for strlen", 0
+    long_len        equ ($ - long_str) - 1      ; Subtract 1 for null terminator
+    special_str     db "Test with numbers 123 and symbols !@#", 0
+    special_len     equ ($ - special_str) - 1   ; Subtract 1 for null terminator
     
     ; Test result messages
-    test_msg        db "Testing ft_strlen:", 10, 0
-    empty_msg       db "Empty string test: ", 0
-    short_msg       db "Short string test: ", 0
-    medium_msg      db "Medium string test: ", 0
-    long_msg        db "Long string test: ", 0
+    test_header     db "=== Testing ft_strlen ===", 10, 0
+    test1_msg       db "Test 1 - Empty string: ", 0
+    test2_msg       db "Test 2 - Short string: ", 0
+    test3_msg       db "Test 3 - Medium string: ", 0
+    test4_msg       db "Test 4 - Long string: ", 0
+    test5_msg       db "Test 5 - String with numbers/symbols: ", 0
     pass_msg        db "PASS", 10, 0
     fail_msg        db "FAIL", 10, 0
     newline         db 10, 0
-    
-    ; Expected results
-    empty_expected  equ 0
-    short_expected  equ 2
-    medium_expected equ 11
-    long_expected   equ 39
-
-section .bss
-    result_buffer   resb 16
 
 section .text
     global _start
@@ -30,120 +28,19 @@ section .text
 
 _start:
     ; Print test header
-    mov rax, 1              ; sys_write
-    mov rdi, 1              ; stdout
-    mov rsi, test_msg
-    mov rdx, 19             ; length of test_msg
-    syscall
-
-    ; Test 1: Empty string
     mov rax, 1
     mov rdi, 1
-    mov rsi, empty_msg
-    mov rdx, 20
+    mov rsi, test_header
+    mov rdx, 27
     syscall
     
-    mov rdi, empty_str
-    call ft_strlen
-    cmp rax, empty_expected
-    je test1_pass
+    ; Run all tests
+    call test1
+    call test2
+    call test3
+    call test4
+    call test5
     
-    mov rax, 1
-    mov rdi, 1
-    mov rsi, fail_msg
-    mov rdx, 5
-    syscall
-    jmp test2
-    
-test1_pass:
-    mov rax, 1
-    mov rdi, 1
-    mov rsi, pass_msg
-    mov rdx, 5
-    syscall
-
-test2:
-    ; Test 2: Short string
-    mov rax, 1
-    mov rdi, 1
-    mov rsi, short_msg
-    mov rdx, 20
-    syscall
-    
-    mov rdi, short_str
-    call ft_strlen
-    cmp rax, short_expected
-    je test2_pass
-    
-    mov rax, 1
-    mov rdi, 1
-    mov rsi, fail_msg
-    mov rdx, 5
-    syscall
-    jmp test3
-    
-test2_pass:
-    mov rax, 1
-    mov rdi, 1
-    mov rsi, pass_msg
-    mov rdx, 5
-    syscall
-
-test3:
-    ; Test 3: Medium string
-    mov rax, 1
-    mov rdi, 1
-    mov rsi, medium_msg
-    mov rdx, 21
-    syscall
-    
-    mov rdi, medium_str
-    call ft_strlen
-    cmp rax, medium_expected
-    je test3_pass
-    
-    mov rax, 1
-    mov rdi, 1
-    mov rsi, fail_msg
-    mov rdx, 5
-    syscall
-    jmp test4
-    
-test3_pass:
-    mov rax, 1
-    mov rdi, 1
-    mov rsi, pass_msg
-    mov rdx, 5
-    syscall
-
-test4:
-    ; Test 4: Long string
-    mov rax, 1
-    mov rdi, 1
-    mov rsi, long_msg
-    mov rdx, 19
-    syscall
-    
-    mov rdi, long_str
-    call ft_strlen
-    cmp rax, long_expected
-    je test4_pass
-    
-    mov rax, 1
-    mov rdi, 1
-    mov rsi, fail_msg
-    mov rdx, 5
-    syscall
-    jmp exit
-    
-test4_pass:
-    mov rax, 1
-    mov rdi, 1
-    mov rsi, pass_msg
-    mov rdx, 5
-    syscall
-
-exit:
     ; Print final newline
     mov rax, 1
     mov rdi, 1
@@ -152,6 +49,139 @@ exit:
     syscall
     
     ; Exit program
-    mov rax, 60             ; sys_exit
-    mov rdi, 0              ; exit status
+    mov rax, 60
+    mov rdi, 0
     syscall
+
+; Helper function to print PASS
+print_pass:
+    push rax
+    push rdi
+    push rsi
+    push rdx
+    
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, pass_msg
+    mov rdx, 5
+    syscall
+    
+    pop rdx
+    pop rsi
+    pop rdi
+    pop rax
+    ret
+
+; Helper function to print FAIL
+print_fail:
+    push rax
+    push rdi
+    push rsi
+    push rdx
+    
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, fail_msg
+    mov rdx, 5
+    syscall
+    
+    pop rdx
+    pop rsi
+    pop rdi
+    pop rax
+    ret
+
+test1:
+    ; Print test message
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, test1_msg
+    mov rdx, 24
+    syscall
+    
+    ; Test empty string
+    mov rdi, empty_str
+    call ft_strlen
+    cmp rax, empty_len
+    je .pass
+    call print_fail
+    ret
+.pass:
+    call print_pass
+    ret
+
+test2:
+    ; Print test message
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, test2_msg
+    mov rdx, 24
+    syscall
+    
+    ; Test short string
+    mov rdi, short_str
+    call ft_strlen
+    cmp rax, short_len
+    je .pass
+    call print_fail
+    ret
+.pass:
+    call print_pass
+    ret
+
+test3:
+    ; Print test message
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, test3_msg
+    mov rdx, 25
+    syscall
+    
+    ; Test medium string
+    mov rdi, medium_str
+    call ft_strlen
+    cmp rax, medium_len
+    je .pass
+    call print_fail
+    ret
+.pass:
+    call print_pass
+    ret
+
+test4:
+    ; Print test message
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, test4_msg
+    mov rdx, 23
+    syscall
+    
+    ; Test long string
+    mov rdi, long_str
+    call ft_strlen
+    cmp rax, long_len
+    je .pass
+    call print_fail
+    ret
+.pass:
+    call print_pass
+    ret
+
+test5:
+    ; Print test message
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, test5_msg
+    mov rdx, 39
+    syscall
+    
+    ; Test string with numbers and symbols
+    mov rdi, special_str
+    call ft_strlen
+    cmp rax, special_len
+    je .pass
+    call print_fail
+    ret
+.pass:
+    call print_pass
+    ret

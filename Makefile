@@ -6,7 +6,9 @@ LIB := $(LIB_DIR)/libasm.a
 SRC_FILES :=	ft_strcpy.s \
 		ft_strdup.s \
 		ft_strlen.s \
-		ft_strcmp.s
+		ft_strcmp.s \
+		ft_read.s \
+		ft_write.s
 
 # Directories
 SRCS_DIR := srcs
