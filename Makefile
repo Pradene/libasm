@@ -4,9 +4,9 @@ LIB := $(LIB_DIR)/libasm.a
 
 # Source files (just names, no paths)
 SRC_FILES :=	ft_strcpy.s \
-							ft_strdup.s \
-							ft_strlen.s \
-							ft_strcmp.s
+		ft_strdup.s \
+		ft_strlen.s \
+		ft_strcmp.s
 
 # Directories
 SRCS_DIR := srcs
@@ -16,22 +16,24 @@ OBJS_DIR := objs
 SRCS := $(addprefix $(SRCS_DIR)/, $(SRC_FILES))
 OBJS := $(addprefix $(OBJS_DIR)/, $(SRC_FILES:.s=.o))
 
+# Test files
 TEST_DIR := tests
-TEST_SRC := $(TEST_DIR)/test.c
+TEST_SRC := $(TEST_DIR)/test.s
 TEST_OBJ := $(OBJS_DIR)/test.o
 TEST_EXE := tester
 
+# Tools and flags
 NASM = nasm
 NASMFLAGS = -f elf64
 AR = ar
 ARFLAGS = rcs
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g
+LD = ld
+LDFLAGS = -dynamic-linker /lib64/ld-linux-x86-64.so.2
 
 # Default target
 all: $(LIB)
 
-# Link object files into the final binary
+# Link object files into the library
 $(LIB): $(OBJS) | $(LIB_DIR)
 	$(AR) $(ARFLAGS) $@ $^
 
@@ -50,13 +52,13 @@ $(LIB_DIR):
 test: $(TEST_EXE)
 	./$(TEST_EXE)
 
-# Compile the test program
-$(TEST_EXE): $(LIB) $(TEST_OBJ)
-	$(CC) $(CFLAGS) -o $@ $(TEST_OBJ) -L$(LIB_DIR) -lasm
+# Link the test program (assembly + library)
+$(TEST_EXE): $(TEST_OBJ) $(LIB)
+	$(LD) $(LDFLAGS) -o $@ $(TEST_OBJ) $(LIB) -lc
 
-# Compile the test source file
+# Compile the test source file (assembly)
 $(TEST_OBJ): $(TEST_SRC) | $(OBJS_DIR)
-	$(CC) $(CFLAGS) -I$(LIB_DIR) -c $< -o $@
+	$(NASM) $(NASMFLAGS) -o $@ $<
 
 # Clean object files
 clean:
