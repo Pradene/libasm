@@ -18,8 +18,8 @@ SRCS := $(addprefix $(SRCS_DIR)/, $(SRC_FILES))
 OBJS := $(addprefix $(OBJS_DIR)/, $(SRC_FILES:.s=.o))
 
 TEST_DIR := tests
-TEST_FILES := strlen.s \
-							strcpy.s
+TEST_FILES := ft_strlen.s \
+							ft_strcpy.s
 TEST_SRCS := $(addprefix $(TEST_DIR)/, $(TEST_FILES))
 TEST_OBJS := $(addprefix $(TEST_DIR)/, $(TEST_FILES:.s=.o))
 
@@ -57,7 +57,6 @@ $(TEST_DIR):
 test-all: $(NAME) $(TEST_OBJS)
 	@echo "Running all tests..."
 	@for test_file in $(TEST_FILES:.s=); do \
-		echo "Test: $$test_file"; \
 		$(LD) $(LDFLAGS) -o test_$$test_file $(TEST_DIR)/$$test_file.o $(NAME) -lc; \
 		./test_$$test_file || echo "$$test_file test failed"; \
 		rm -f test_$$test_file; \
