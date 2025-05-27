@@ -29,6 +29,9 @@ ft_atoi_base:
   mov QWORD [rbp - 32], 1
   mov QWORD [rbp - 40], 0
   mov QWORD [rbp - 48], 0
+  
+  cmp [rbp - 24], 2 ; Check if base contains at least 2 character
+  jl .done
 
   xor rcx, rcx ; Reset counter
 
@@ -106,3 +109,4 @@ ft_atoi_base:
   mov rsp, rbp
   pop rbp
   ret
+
