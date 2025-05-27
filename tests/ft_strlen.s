@@ -23,14 +23,14 @@ section .data
     newline         db 10, 0
 
 section .text
-    global _start
+    global main
     extern ft_strlen
 
-_start:
+main:
     ; Print test header
     mov rax, 1
     mov rdi, 1
-    mov rsi, test_header
+    lea rsi, [rel test_header]  ; Use RIP-relative addressing
     mov rdx, 27
     syscall
     
@@ -44,7 +44,7 @@ _start:
     ; Print final newline
     mov rax, 1
     mov rdi, 1
-    mov rsi, newline
+    lea rsi, [rel newline]
     mov rdx, 1
     syscall
     
@@ -62,7 +62,7 @@ print_pass:
     
     mov rax, 1
     mov rdi, 1
-    mov rsi, pass_msg
+    lea rsi, [rel pass_msg]     ; Already correct
     mov rdx, 5
     syscall
     
@@ -81,7 +81,7 @@ print_fail:
     
     mov rax, 1
     mov rdi, 1
-    mov rsi, fail_msg
+    lea rsi, [rel fail_msg]     ; Already correct
     mov rdx, 5
     syscall
     
@@ -95,12 +95,12 @@ test1:
     ; Print test message
     mov rax, 1
     mov rdi, 1
-    mov rsi, test1_msg
+    lea rsi, [rel test1_msg]    ; Already correct
     mov rdx, 24
     syscall
     
     ; Test empty string
-    mov rdi, empty_str
+    lea rdi, [rel empty_str]    ; Use RIP-relative addressing
     call ft_strlen
     cmp rax, empty_len
     je .pass
@@ -114,12 +114,12 @@ test2:
     ; Print test message
     mov rax, 1
     mov rdi, 1
-    mov rsi, test2_msg
+    lea rsi, [rel test2_msg]    ; Already correct
     mov rdx, 24
     syscall
     
     ; Test short string
-    mov rdi, short_str
+    lea rdi, [rel short_str]    ; Use RIP-relative addressing
     call ft_strlen
     cmp rax, short_len
     je .pass
@@ -133,12 +133,12 @@ test3:
     ; Print test message
     mov rax, 1
     mov rdi, 1
-    mov rsi, test3_msg
+    lea rsi, [rel test3_msg]    ; Already correct
     mov rdx, 25
     syscall
     
     ; Test medium string
-    mov rdi, medium_str
+    lea rdi, [rel medium_str]   ; Use RIP-relative addressing
     call ft_strlen
     cmp rax, medium_len
     je .pass
@@ -152,12 +152,12 @@ test4:
     ; Print test message
     mov rax, 1
     mov rdi, 1
-    mov rsi, test4_msg
+    lea rsi, [rel test4_msg]    ; Already correct
     mov rdx, 23
     syscall
     
     ; Test long string
-    mov rdi, long_str
+    lea rdi, [rel long_str]     ; Use RIP-relative addressing
     call ft_strlen
     cmp rax, long_len
     je .pass
@@ -171,12 +171,12 @@ test5:
     ; Print test message
     mov rax, 1
     mov rdi, 1
-    mov rsi, test5_msg
+    lea rsi, [rel test5_msg]    ; Already correct
     mov rdx, 39
     syscall
     
     ; Test string with numbers and symbols
-    mov rdi, special_str
+    lea rdi, [rel special_str]  ; Use RIP-relative addressing
     call ft_strlen
     cmp rax, special_len
     je .pass

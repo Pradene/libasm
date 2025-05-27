@@ -4,6 +4,8 @@ NAME := libasm.a
 # Source files (just names, no paths)
 SRC_FILES := ft_strcpy.s \
 			ft_strdup.s \
+			ft_strchr.s \
+			ft_atoi_base.s \
 			ft_strlen.s \
 			ft_strcmp.s \
 			ft_read.s \
@@ -19,7 +21,10 @@ OBJS := $(addprefix $(OBJS_DIR)/, $(SRC_FILES:.s=.o))
 
 TEST_DIR := tests
 TEST_FILES := ft_strlen.s \
-							ft_strcpy.s
+			ft_strcpy.s \
+			ft_strcmp.s \
+			ft_strdup.s
+
 TEST_SRCS := $(addprefix $(TEST_DIR)/, $(TEST_FILES))
 TEST_OBJS := $(addprefix $(TEST_DIR)/, $(TEST_FILES:.s=.o))
 
@@ -28,8 +33,8 @@ NASM = nasm
 NASMFLAGS = -f elf64
 AR = ar
 ARFLAGS = rcs
-LD = ld
-LDFLAGS = -dynamic-linker /lib64/ld-linux-x86-64.so.2
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror
 
 # Default target
 all: $(NAME)
@@ -43,22 +48,21 @@ $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.s | $(OBJS_DIR)
 	$(NASM) $(NASMFLAGS) -o $@ $<
 
 # Assemble test files
-$(TEST_DIR)/%.o: $(TEST_DIR)/%.s | $(TEST_DIR)
+$(TEST_DIR)/%.o: $(TEST_DIR)/%.s
 	$(NASM) $(NASMFLAGS) -o $@ $<
 
 # Ensure build directories exist
 $(OBJS_DIR):
 	mkdir -p $@
 
-$(TEST_DIR):
-	mkdir -p $@
-
 # Test all - compile and run all test programs
 test-all: $(NAME) $(TEST_OBJS)
 	@echo "Running all tests..."
 	@for test_file in $(TEST_FILES:.s=); do \
-		$(LD) $(LDFLAGS) -o test_$$test_file $(TEST_DIR)/$$test_file.o $(NAME) -lc; \
-		./test_$$test_file || echo "$$test_file test failed"; \
+		echo "Testing $$test_file..."; \
+		$(CC) -o test_$$test_file $(TEST_DIR)/$$test_file.o $(NAME) && \
+		./test_$$test_file && \
+		echo "$$test_file: PASS" || echo "$$test_file: FAIL"; \
 		rm -f test_$$test_file; \
 	done
 	@echo "All tests completed."
@@ -70,10 +74,26 @@ ifndef FILE
 	@echo "Example: make test FILE=strlen"
 	@echo "Available tests: $(TEST_FILES:.s=)"
 else
-	@$(MAKE) $(TEST_DIR)/$(FILE).o
+	@echo "Building test object for $(FILE)..."
+	@$(NASM) $(NASMFLAGS) -o $(TEST_DIR)/$(FILE).o $(TEST_DIR)/$(FILE).s
 	@echo "Linking and running $(FILE) test..."
-	$(LD) $(LDFLAGS) -o test_$(FILE) $(TEST_DIR)/$(FILE).o $(NAME) -lc
-	@./test_$(FILE) || (echo "$(FILE) test failed"; exit 1)
+	@$(CC) -o test_$(FILE) $(TEST_DIR)/$(FILE).o $(NAME)
+	@./test_$(FILE) && echo "$(FILE): PASS" || (echo "$(FILE): FAIL"; exit 1)
+	@rm -f test_$(FILE)
+endif
+
+# Debug test - shows linking command
+debug-test: $(NAME)
+ifndef FILE
+	@echo "Usage: make debug-test FILE=<filename_without_extension>"
+else
+	@echo "Building test object for $(FILE)..."
+	$(NASM) $(NASMFLAGS) -o $(TEST_DIR)/$(FILE).o $(TEST_DIR)/$(FILE).s
+	@echo "Linking command:"
+	@echo "$(CC) -o test_$(FILE) $(TEST_DIR)/$(FILE).o $(NAME)"
+	$(CC) -fPIE -pie -o test_$(FILE) $(TEST_DIR)/$(FILE).o $(NAME)
+	@echo "Running test..."
+	./test_$(FILE)
 	@rm -f test_$(FILE)
 endif
 
@@ -88,4 +108,4 @@ fclean: clean
 # Rebuild all
 re: fclean all
 
-.PHONY: all clean fclean re test test-all
+.PHONY: all clean fclean re test test-all debug-test

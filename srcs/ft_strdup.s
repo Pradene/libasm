@@ -5,29 +5,27 @@ section .text
     extern malloc
 
 ft_strdup:
-    ; SRC = RDI
-    push rdi ; save RDI inside the stack
+    ; src = rdi
+    push rdi ; save rdi inside the stack
 
-    ; do not put src inside RDI because already in there
+    ; do not put src inside rdi because already in there
     call ft_strlen
 
-    add rax, 1 ; add one for null terminated character
-    mov rdi, rax ; move value inside RDI for malloc
-    call malloc
+    inc rax ; add one for null terminated character
+    mov rdi, rax ; move value inside rdi for malloc
+    call malloc wrt ..plt
 
-    test rax, rax ; test if malloc returned NULL
+    test rax, rax ; test if malloc returned null
     jz .error
 
-    pop rsi ; get back SRC inside RSI 
     mov rdi, rax
+    pop rsi ; get back src inside rsi 
     call ft_strcpy
 
-    ; DEST is already inside RAX
+    ; dest is already inside rax
     ret
 
 .error:
     pop rdi ; restore stack before returning
-    xor rax, rax ; return NULL
+    xor rax, rax ; return null
     ret
-
-section .data

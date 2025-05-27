@@ -26,15 +26,15 @@ section .bss
     dest_buffer5    resb 100
 
 section .text
-    global _start
+    global main
     extern ft_strcpy
     extern ft_strcmp
 
-_start:
+main:
     ; Print test header
     mov rax, 1
     mov rdi, 1
-    mov rsi, test_header
+    lea rsi, [rel test_header]  ; Use RIP-relative addressing
     mov rdx, 27
     syscall
     
@@ -48,7 +48,7 @@ _start:
     ; Print final newline
     mov rax, 1
     mov rdi, 1
-    mov rsi, newline
+    lea rsi, [rel newline]      ; Use RIP-relative addressing
     mov rdx, 1
     syscall
     
@@ -66,7 +66,7 @@ print_pass:
     
     mov rax, 1
     mov rdi, 1
-    mov rsi, pass_msg
+    lea rsi, [rel pass_msg]     ; Use RIP-relative addressing
     mov rdx, 5
     syscall
     
@@ -85,7 +85,7 @@ print_fail:
     
     mov rax, 1
     mov rdi, 1
-    mov rsi, fail_msg
+    lea rsi, [rel fail_msg]     ; Use RIP-relative addressing
     mov rdx, 5
     syscall
     
@@ -99,25 +99,27 @@ test1:
     ; Print test message
     mov rax, 1
     mov rdi, 1
-    mov rsi, test1_msg
+    lea rsi, [rel test1_msg]    ; Use RIP-relative addressing
     mov rdx, 24
     syscall
     
     ; Clear destination buffer
-    mov byte [dest_buffer1], 0xFF
+    lea rax, [rel dest_buffer1] ; Use RIP-relative addressing
+    mov byte [rax], 0
     
     ; Test empty string copy
-    mov rdi, dest_buffer1   ; destination
-    mov rsi, empty_src      ; source
+    lea rdi, [rel dest_buffer1] ; destination - RIP-relative
+    lea rsi, [rel empty_src]    ; source - RIP-relative
     call ft_strcpy
     
     ; Check if return value is destination
-    cmp rax, dest_buffer1
+    lea rdx, [rel dest_buffer1] ; RIP-relative for comparison
+    cmp rax, rdx
     jne .fail
     
     ; Check if strings are equal
-    mov rdi, dest_buffer1
-    mov rsi, empty_src
+    lea rdi, [rel dest_buffer1] ; RIP-relative
+    lea rsi, [rel empty_src]    ; RIP-relative
     call ft_strcmp
     cmp rax, 0
     je .pass
@@ -133,28 +135,29 @@ test2:
     ; Print test message
     mov rax, 1
     mov rdi, 1
-    mov rsi, test2_msg
+    lea rsi, [rel test2_msg]    ; Use RIP-relative addressing
     mov rdx, 24
     syscall
     
     ; Clear destination buffer
     mov rcx, 10
-    mov rdi, dest_buffer2
+    lea rdi, [rel dest_buffer2] ; Use RIP-relative addressing
     mov al, 0xFF
     rep stosb
     
     ; Test short string copy
-    mov rdi, dest_buffer2   ; destination
-    mov rsi, short_src      ; source
+    lea rdi, [rel dest_buffer2] ; destination - RIP-relative
+    lea rsi, [rel short_src]    ; source - RIP-relative
     call ft_strcpy
     
     ; Check if return value is destination
-    cmp rax, dest_buffer2
+    lea rdx, [rel dest_buffer2] ; RIP-relative for comparison
+    cmp rax, rdx
     jne .fail
     
     ; Check if strings are equal
-    mov rdi, dest_buffer2
-    mov rsi, short_src
+    lea rdi, [rel dest_buffer2] ; RIP-relative
+    lea rsi, [rel short_src]    ; RIP-relative
     call ft_strcmp
     cmp rax, 0
     je .pass
@@ -170,28 +173,29 @@ test3:
     ; Print test message
     mov rax, 1
     mov rdi, 1
-    mov rsi, test3_msg
+    lea rsi, [rel test3_msg]    ; Use RIP-relative addressing
     mov rdx, 25
     syscall
     
     ; Clear destination buffer
     mov rcx, 50
-    mov rdi, dest_buffer3
+    lea rdi, [rel dest_buffer3] ; Use RIP-relative addressing
     mov al, 0xFF
     rep stosb
     
     ; Test medium string copy
-    mov rdi, dest_buffer3   ; destination
-    mov rsi, medium_src     ; source
+    lea rdi, [rel dest_buffer3] ; destination - RIP-relative
+    lea rsi, [rel medium_src]   ; source - RIP-relative
     call ft_strcpy
     
     ; Check if return value is destination
-    cmp rax, dest_buffer3
+    lea rdx, [rel dest_buffer3] ; RIP-relative for comparison
+    cmp rax, rdx
     jne .fail
     
     ; Check if strings are equal
-    mov rdi, dest_buffer3
-    mov rsi, medium_src
+    lea rdi, [rel dest_buffer3] ; RIP-relative
+    lea rsi, [rel medium_src]   ; RIP-relative
     call ft_strcmp
     cmp rax, 0
     je .pass
@@ -207,28 +211,29 @@ test4:
     ; Print test message
     mov rax, 1
     mov rdi, 1
-    mov rsi, test4_msg
+    lea rsi, [rel test4_msg]    ; Use RIP-relative addressing
     mov rdx, 23
     syscall
     
     ; Clear destination buffer
     mov rcx, 100
-    mov rdi, dest_buffer4
+    lea rdi, [rel dest_buffer4] ; Use RIP-relative addressing
     mov al, 0xFF
     rep stosb
     
     ; Test long string copy
-    mov rdi, dest_buffer4   ; destination
-    mov rsi, long_src       ; source
+    lea rdi, [rel dest_buffer4] ; destination - RIP-relative
+    lea rsi, [rel long_src]     ; source - RIP-relative
     call ft_strcpy
     
     ; Check if return value is destination
-    cmp rax, dest_buffer4
+    lea rdx, [rel dest_buffer4] ; RIP-relative for comparison
+    cmp rax, rdx
     jne .fail
     
     ; Check if strings are equal
-    mov rdi, dest_buffer4
-    mov rsi, long_src
+    lea rdi, [rel dest_buffer4] ; RIP-relative
+    lea rsi, [rel long_src]     ; RIP-relative
     call ft_strcmp
     cmp rax, 0
     je .pass
@@ -244,28 +249,29 @@ test5:
     ; Print test message
     mov rax, 1
     mov rdi, 1
-    mov rsi, test5_msg
+    lea rsi, [rel test5_msg]    ; Use RIP-relative addressing
     mov rdx, 39
     syscall
     
     ; Clear destination buffer
     mov rcx, 100
-    mov rdi, dest_buffer5
+    lea rdi, [rel dest_buffer5] ; Use RIP-relative addressing
     mov al, 0xFF
     rep stosb
     
     ; Test string with numbers and symbols
-    mov rdi, dest_buffer5   ; destination
-    mov rsi, special_src    ; source
+    lea rdi, [rel dest_buffer5] ; destination - RIP-relative
+    lea rsi, [rel special_src]  ; source - RIP-relative
     call ft_strcpy
     
     ; Check if return value is destination
-    cmp rax, dest_buffer5
+    lea rdx, [rel dest_buffer5] ; RIP-relative for comparison
+    cmp rax, rdx
     jne .fail
     
     ; Check if strings are equal
-    mov rdi, dest_buffer5
-    mov rsi, special_src
+    lea rdi, [rel dest_buffer5] ; RIP-relative
+    lea rsi, [rel special_src]  ; RIP-relative
     call ft_strcmp
     cmp rax, 0
     je .pass
