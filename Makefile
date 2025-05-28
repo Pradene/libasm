@@ -20,7 +20,8 @@ SRCS := $(addprefix $(SRCS_DIR)/, $(SRC_FILES))
 OBJS := $(addprefix $(OBJS_DIR)/, $(SRC_FILES:.s=.o))
 
 TEST_DIR := tests
-TEST_FILES := ft_strlen.s \
+TEST_FILES := ft_atoi_base.s \
+			ft_strlen.s \
 			ft_strcpy.s \
 			ft_strcmp.s \
 			ft_strdup.s
@@ -30,11 +31,11 @@ TEST_OBJS := $(addprefix $(TEST_DIR)/, $(TEST_FILES:.s=.o))
 
 # Tools and flags
 NASM = nasm
-NASMFLAGS = -f elf64
+NASMFLAGS = -f elf64 -DPIC
 AR = ar
 ARFLAGS = rcs
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CCFLAGS = -Wall -Wextra -Werror -fPIE -pie -g
 
 # Default target
 all: $(NAME)
@@ -60,7 +61,7 @@ test-all: $(NAME) $(TEST_OBJS)
 	@echo "Running all tests..."
 	@for test_file in $(TEST_FILES:.s=); do \
 		echo "Testing $$test_file..."; \
-		$(CC) -o test_$$test_file $(TEST_DIR)/$$test_file.o $(NAME) && \
+		$(CC) $(CCFLAGS) -o test_$$test_file $(TEST_DIR)/$$test_file.o $(NAME) && \
 		./test_$$test_file && \
 		echo "$$test_file: PASS" || echo "$$test_file: FAIL"; \
 		rm -f test_$$test_file; \
@@ -77,7 +78,7 @@ else
 	@echo "Building test object for $(FILE)..."
 	@$(NASM) $(NASMFLAGS) -o $(TEST_DIR)/$(FILE).o $(TEST_DIR)/$(FILE).s
 	@echo "Linking and running $(FILE) test..."
-	@$(CC) -o test_$(FILE) $(TEST_DIR)/$(FILE).o $(NAME)
+	@$(CC) $(CCFLAGS) -o test_$(FILE) $(TEST_DIR)/$(FILE).o $(NAME)
 	@./test_$(FILE) && echo "$(FILE): PASS" || (echo "$(FILE): FAIL"; exit 1)
 	@rm -f test_$(FILE)
 endif

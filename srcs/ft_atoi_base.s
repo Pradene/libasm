@@ -3,6 +3,72 @@ section .text
   extern ft_strlen
   extern ft_strchr
 
+is_base_valid:
+  ; ARGUMENTS
+  ; RDI = SRC
+
+  ; RETURN RAX (boolean)
+  ; true = valid
+
+  push rbp        ; Save caller's base pointer
+  mov rbp, rsp    ; Set up our base pointer
+
+  sub rsp, 256    ; Allocate 256 bytes on stack
+
+  push rdi
+
+  ; Clear the array
+  mov rdi, rsp    ; Array starts at current stack pointer
+  mov rcx, 256    ; Clear 256 bytes
+  xor al, al      ; Value to store (0)
+  rep stosb
+
+  pop rdi
+  xor rcx, rcx
+
+.loop:
+  ; Duplicate checking logic
+  ; Access character 'A' (ASCII 65): [rbp - 256 + 65]
+
+  ; Check null terminated character
+  mov al, [rdi + rcx]
+  test al, al
+  jz .check_invalid_character
+
+  ; Check if we already see the character
+  movzx rax, al
+  cmp byte [rbp - 256 + rax], 1
+  je .ko
+  mov byte [rbp - 256 + rax], 1
+
+  inc rcx
+  jmp .loop
+
+.check_invalid_character:
+  cmp byte [rbp - 256 + 32], 1
+  je .ko
+  cmp byte [rbp - 256 + 43], 1
+  je .ko
+  cmp byte [rbp - 256 + 45], 1
+  je .ko
+
+  jmp .ok
+
+.ok:
+  mov rax, 1
+  jmp .done
+
+.ko:
+  mov rax, 0
+  jmp .done
+
+.done:
+  mov rsp, rbp    ; Restore stack pointer
+  pop rbp         ; Restore caller's base pointer
+  ret
+
+
+
 ft_atoi_base:
   ; ARGUMENTS
   ; RDI = SRC
@@ -29,9 +95,14 @@ ft_atoi_base:
   mov QWORD [rbp - 32], 1
   mov QWORD [rbp - 40], 0
   mov QWORD [rbp - 48], 0
-  
-  cmp [rbp - 24], 2 ; Check if base contains at least 2 character
+
+  cmp QWORD [rbp - 24], 2 ; Check if base contains at least 2 character
   jl .done
+
+  mov rdi, [rbp - 16]
+  call is_base_valid
+  test rax, rax
+  jz .done
 
   xor rcx, rcx ; Reset counter
 
@@ -104,9 +175,9 @@ ft_atoi_base:
 
 .done:
   mov rax, [rbp - 40]
-  mul QWORD [rbp - 32]
+  mov rcx, [rbp - 32]
+  imul rax, rcx
 
   mov rsp, rbp
   pop rbp
   ret
-
