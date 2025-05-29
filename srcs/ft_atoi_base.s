@@ -13,17 +13,17 @@ is_base_valid:
   push rbp        ; Save caller's base pointer
   mov rbp, rsp    ; Set up our base pointer
 
+  push rbx
+  mov rbx, rdi
+
   sub rsp, 256    ; Allocate 256 bytes on stack
-
-  push rdi
-
   ; Clear the array
   mov rdi, rsp    ; Array starts at current stack pointer
   mov rcx, 256    ; Clear 256 bytes
   xor al, al      ; Value to store (0)
   rep stosb
 
-  pop rdi
+  mov rdi, rbx
   xor rcx, rcx
 
 .loop:
@@ -63,6 +63,8 @@ is_base_valid:
   jmp .done
 
 .done:
+  add rsp, 256
+  pop rbx
   mov rsp, rbp    ; Restore stack pointer
   pop rbp         ; Restore caller's base pointer
   ret
@@ -84,6 +86,12 @@ ft_atoi_base:
   push rbp
   mov rbp, rsp
   sub rsp, 48
+
+  ; Check for null pointers
+  test rdi, rdi
+  jz .done
+  test rsi, rsi
+  jz .done
 
   mov [rbp - 8], rdi
   mov [rbp - 16], rsi
@@ -138,6 +146,8 @@ ft_atoi_base:
 
   inc rcx ; Increment counter if first char is '-'
   mov QWORD [rbp - 32], -1 ; Set SIGN to negative
+  mov rax, [rbp - 8]
+  mov al, [rax + rcx]
   jmp .loop
 
 .check_plus:
@@ -146,6 +156,8 @@ ft_atoi_base:
 
   inc rcx
   mov QWORD [rbp - 32], 1
+  mov rax, [rbp - 8]
+  mov al, [rax + rcx]
   jmp .loop
 
 .loop:

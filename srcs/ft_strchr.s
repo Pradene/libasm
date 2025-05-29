@@ -3,36 +3,36 @@ section .text
 
 ft_strchr:
   ; ARGUMENTS
-  ; RDI = SRC
-  ; RSI = CHAR
-
+  ; RDI = SRC (string pointer)
+  ; RSI = CHAR (character value as integer)
   push rbp
   mov rbp, rsp
 
-  mov   dl, [rsi]
+  push rcx
 
-  xor   rcx, rcx
+  mov   dl, sil    ; Get character from RSI (lower 8 bits)
+  xor   rcx, rcx   ; Index counter
 
 .loop:
-  mov   al, [rdi + rcx]
-  test  al, dl
-  je    .found
-
-  test  al, al
-  jz    .not_found
-
+  mov   al, [rdi + rcx]  ; Get current character from string
+  cmp   al, dl           ; Compare with target character
+  je    .found           ; Found it!
+  test  al, al           ; Check if end of string
+  jz    .check_null      ; End of string reached
   inc   rcx
   jmp   .loop
-  
-.not_found:
-  test dl, dl
-  jz .found
-  xor   rax, rax
-  ret   ; Return NULL
+
+.check_null:
+  test  dl, dl           ; Are we looking for null terminator?
+  jz    .found           ; Yes, and we found it
+  xor   rax, rax         ; No, return NULL
+  jmp   .done
 
 .found:
-  lea   rax, [rdi + rcx]
+  lea   rax, [rdi + rcx] ; Return pointer to found character
+
+.done:
   pop rcx
   mov rsp, rbp
   pop rbp
-  ret   ; Return &src[i]
+  ret
