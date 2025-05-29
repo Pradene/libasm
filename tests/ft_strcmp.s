@@ -50,13 +50,6 @@ main:
     call test4
     call test5
 
-    ; Print final newline
-    mov rax, 1
-    mov rdi, 1
-    lea rsi, [rel newline]
-    mov rdx, 1
-    syscall
-
     ; Exit
     mov rax, 60
     xor rdi, rdi

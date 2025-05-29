@@ -1,15 +1,15 @@
 section .data
     ; Test strings
-    empty_str       db 0
-    empty_len       equ ($ - empty_str) - 1     ; Subtract 1 for null terminator
-    short_str       db "Hi", 0
-    short_len       equ ($ - short_str) - 1     ; Subtract 1 for null terminator
-    medium_str      db "Hello World", 0
-    medium_len      equ ($ - medium_str) - 1    ; Subtract 1 for null terminator
-    long_str        db "This is a longer test string for strlen", 0
-    long_len        equ ($ - long_str) - 1      ; Subtract 1 for null terminator
-    special_str     db "Test with numbers 123 and symbols !@#", 0
-    special_len     equ ($ - special_str) - 1   ; Subtract 1 for null terminator
+    test1_str       db 0
+    test1_len       equ ($ - test1_str) - 1     ; Subtract 1 for null terminator
+    test2_str       db "Hi", 0
+    test2_len       equ ($ - test2_str) - 1     ; Subtract 1 for null terminator
+    test3_str      db "Hello World", 0
+    test3_len      equ ($ - test3_str) - 1    ; Subtract 1 for null terminator
+    test4_str        db "This is a longer test string for strlen", 0
+    test4_len        equ ($ - test4_str) - 1      ; Subtract 1 for null terminator
+    test5_str     db "Test with numbers 123 and symbols !@#", 0
+    test5_len     equ ($ - test5_str) - 1   ; Subtract 1 for null terminator
     
     ; Test result messages
     test_header     db "=== Testing ft_strlen ===", 10, 0
@@ -40,14 +40,7 @@ main:
     call test3
     call test4
     call test5
-    
-    ; Print final newline
-    mov rax, 1
-    mov rdi, 1
-    lea rsi, [rel newline]
-    mov rdx, 1
-    syscall
-    
+
     ; Exit program
     mov rax, 60
     mov rdi, 0
@@ -100,9 +93,9 @@ test1:
     syscall
     
     ; Test empty string
-    lea rdi, [rel empty_str]    ; Use RIP-relative addressing
+    lea rdi, [rel test1_str]    ; Use RIP-relative addressing
     call ft_strlen
-    cmp rax, empty_len
+    cmp rax, test1_len
     je .pass
     call print_fail
     ret
@@ -119,9 +112,9 @@ test2:
     syscall
     
     ; Test short string
-    lea rdi, [rel short_str]    ; Use RIP-relative addressing
+    lea rdi, [rel test2_str]    ; Use RIP-relative addressing
     call ft_strlen
-    cmp rax, short_len
+    cmp rax, test2_len
     je .pass
     call print_fail
     ret
@@ -138,9 +131,9 @@ test3:
     syscall
     
     ; Test medium string
-    lea rdi, [rel medium_str]   ; Use RIP-relative addressing
+    lea rdi, [rel test3_str]   ; Use RIP-relative addressing
     call ft_strlen
-    cmp rax, medium_len
+    cmp rax, test3_len
     je .pass
     call print_fail
     ret
@@ -157,9 +150,9 @@ test4:
     syscall
     
     ; Test long string
-    lea rdi, [rel long_str]     ; Use RIP-relative addressing
+    lea rdi, [rel test4_str]     ; Use RIP-relative addressing
     call ft_strlen
-    cmp rax, long_len
+    cmp rax, test4_len
     je .pass
     call print_fail
     ret
@@ -176,9 +169,9 @@ test5:
     syscall
     
     ; Test string with numbers and symbols
-    lea rdi, [rel special_str]  ; Use RIP-relative addressing
+    lea rdi, [rel test5_str]  ; Use RIP-relative addressing
     call ft_strlen
-    cmp rax, special_len
+    cmp rax, test5_len
     je .pass
     call print_fail
     ret

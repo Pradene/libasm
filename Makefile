@@ -64,6 +64,7 @@ test-all: $(NAME) $(TEST_OBJS)
 		$(CC) $(CCFLAGS) -o test_$$test_file $(TEST_DIR)/$$test_file.o $(NAME) && \
 		./test_$$test_file && \
 		echo "$$test_file: PASS" || echo "$$test_file: FAIL"; \
+		echo ; \
 		rm -f test_$$test_file; \
 	done
 	@echo "All tests completed."

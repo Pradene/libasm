@@ -37,21 +37,14 @@ main:
     lea rsi, [rel test_header]  ; Use RIP-relative addressing
     mov rdx, 27
     syscall
-    
+
     ; Run all tests
     call test1
     call test2
     call test3
     call test4
     call test5
-    
-    ; Print final newline
-    mov rax, 1
-    mov rdi, 1
-    lea rsi, [rel newline]      ; Use RIP-relative addressing
-    mov rdx, 1
-    syscall
-    
+
     ; Exit program
     mov rax, 60
     mov rdi, 0
