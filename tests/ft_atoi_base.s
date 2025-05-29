@@ -7,55 +7,55 @@ section .data
     test1_str       db "1010", 0
     test1_base      db "01", 0
     test1_expected  dq 10
-    test1_desc      db "Test 1: '1010' in base '01': ", 0
+    test1_desc      db "Test 1 - '1010' in base '01': ", 0
     test1_desc_len  equ $ - test1_desc - 1
 
     test2_str       db "7F", 0
     test2_base      db "0123456789ABCDEF", 0
     test2_expected  dq 127
-    test2_desc      db "Test 2: '7F' in base '0123456789ABCDEF': ", 0
+    test2_desc      db "Test 2 - '7F' in base '0123456789ABCDEF': ", 0
     test2_desc_len  equ $ - test2_desc - 1
 
     test3_str       db "-10", 0
     test3_base      db "01", 0
     test3_expected  dq -2
-    test3_desc      db "Test 3: '-10' in base '01': ", 0
+    test3_desc      db "Test 3 - '-10' in base '01': ", 0
     test3_desc_len  equ $ - test3_desc - 1
 
     test4_str       db "   +42", 0
     test4_base      db "0123456789", 0
     test4_expected  dq 42
-    test4_desc      db "Test 4: '   +42' in base '0123456789': ", 0
+    test4_desc      db "Test 4 - '   +42' in base '0123456789': ", 0
     test4_desc_len  equ $ - test4_desc - 1
 
     test5_str       db "   -42", 0
     test5_base      db "0123456789", 0
     test5_expected  dq -42
-    test5_desc      db "Test 5: '   -42' in base '0123456789': ", 0
+    test5_desc      db "Test 5 - '   -42' in base '0123456789': ", 0
     test5_desc_len  equ $ - test5_desc - 1
 
     test6_str       db "0", 0
     test6_base      db "0123456789", 0
     test6_expected  dq 0
-    test6_desc      db "Test 6: '0' in base '0123456789': ", 0
+    test6_desc      db "Test 6 - '0' in base '0123456789': ", 0
     test6_desc_len  equ $ - test6_desc - 1
 
     test7_str       db "invalid", 0
     test7_base      db "01", 0
     test7_expected  dq 0
-    test7_desc      db "Test 7: 'invalid' in base '01': ", 0
+    test7_desc      db "Test 7 - 'invalid' in base '01': ", 0
     test7_desc_len  equ $ - test7_desc - 1
 
     test8_str       db "123", 0
     test8_base      db "0", 0
     test8_expected  dq 0
-    test8_desc      db "Test 8: base '0' (invalid): ", 0
+    test8_desc      db "Test 8 - base '0' (invalid): ", 0
     test8_desc_len  equ $ - test8_desc - 1
 
     test9_str       db "1010", 0
     test9_base      db "011", 0
     test9_expected  dq 0
-    test9_desc      db "Test 9: base with duplicates: ", 0
+    test9_desc      db "Test 9 - base with duplicates: ", 0
     test9_desc_len  equ $ - test9_desc - 1
 
     ; Messages
