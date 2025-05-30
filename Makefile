@@ -4,6 +4,7 @@ NAME := libasm.a
 # Source files (just names, no paths)
 SRC_FILES := ft_strcpy.s \
 			ft_list_size.s \
+			ft_list_push_front.s \
 			ft_strdup.s \
 			ft_strchr.s \
 			ft_atoi_base.s \
