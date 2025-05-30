@@ -3,6 +3,7 @@ NAME := libasm.a
 
 # Source files (just names, no paths)
 SRC_FILES := ft_strcpy.s \
+			ft_list_size.s \
 			ft_strdup.s \
 			ft_strchr.s \
 			ft_atoi_base.s \
@@ -31,7 +32,7 @@ TEST_OBJS := $(addprefix $(TEST_DIR)/, $(TEST_FILES:.s=.o))
 
 # Tools and flags
 NASM = nasm
-NASMFLAGS = -f elf64 -DPIC
+NASMFLAGS = -f elf64 -DPIC -I incs/
 AR = ar
 ARFLAGS = rcs
 CC = gcc
@@ -58,6 +59,7 @@ $(OBJS_DIR):
 
 # Test all - compile and run all test programs
 test-all: $(NAME) $(TEST_OBJS)
+	@echo
 	@echo "Running all tests..."
 	@for test_file in $(TEST_FILES:.s=); do \
 		echo "Testing $$test_file..."; \
@@ -84,21 +86,6 @@ else
 	@rm -f test_$(FILE)
 endif
 
-# Debug test - shows linking command
-debug-test: $(NAME)
-ifndef FILE
-	@echo "Usage: make debug-test FILE=<filename_without_extension>"
-else
-	@echo "Building test object for $(FILE)..."
-	$(NASM) $(NASMFLAGS) -o $(TEST_DIR)/$(FILE).o $(TEST_DIR)/$(FILE).s
-	@echo "Linking command:"
-	@echo "$(CC) -o test_$(FILE) $(TEST_DIR)/$(FILE).o $(NAME)"
-	$(CC) -fPIE -pie -o test_$(FILE) $(TEST_DIR)/$(FILE).o $(NAME)
-	@echo "Running test..."
-	./test_$(FILE)
-	@rm -f test_$(FILE)
-endif
-
 # Clean object files
 clean:
 	rm -rf $(OBJS_DIR) $(TEST_OBJS)
@@ -110,4 +97,4 @@ fclean: clean
 # Rebuild all
 re: fclean all
 
-.PHONY: all clean fclean re test test-all debug-test
+.PHONY: all clean fclean re test test-all
