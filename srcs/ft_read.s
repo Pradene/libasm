@@ -18,7 +18,7 @@ ft_read:
   neg rax
   mov rdi, rax
 
-  call __errno_location ; get pointer to errno
+  call __errno_location wrt ..plt ; get pointer to errno
   mov [rax], edi ; store errno inside int
 
   ; return -1

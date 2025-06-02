@@ -26,7 +26,9 @@ TEST_FILES := ft_atoi_base.s \
 			ft_strlen.s \
 			ft_strcpy.s \
 			ft_strcmp.s \
-			ft_strdup.s
+			ft_strdup.s \
+			ft_read.s \
+			ft_write.s
 
 TEST_SRCS := $(addprefix $(TEST_DIR)/, $(TEST_FILES))
 TEST_OBJS := $(addprefix $(TEST_DIR)/, $(TEST_FILES:.s=.o))
