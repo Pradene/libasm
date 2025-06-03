@@ -4,6 +4,7 @@ NAME := libasm.a
 # Source files (just names, no paths)
 SRC_FILES := ft_strcpy.s \
 			ft_list_size.s \
+			ft_list_print.s \
 			ft_list_push_front.s \
 			ft_strdup.s \
 			ft_strchr.s \
@@ -24,6 +25,7 @@ OBJS := $(addprefix $(OBJS_DIR)/, $(SRC_FILES:.s=.o))
 TEST_DIR := tests
 TEST_FILES := ft_atoi_base.s \
 			ft_strlen.s \
+			ft_list_print.s \
 			ft_strcpy.s \
 			ft_strcmp.s \
 			ft_strdup.s \
@@ -79,7 +81,7 @@ test: $(NAME)
 ifndef FILE
 	@echo "Usage: make test FILE=<filename_without_extension>"
 	@echo "Example: make test FILE=strlen"
-	@echo "Available tests: $(TEST_FILES:.s=)"
+	@echo "Available test files: $(TEST_FILES:.s=)"
 else
 	@echo "Building test object for $(FILE)..."
 	@$(NASM) $(NASMFLAGS) -o $(TEST_DIR)/$(FILE).o $(TEST_DIR)/$(FILE).s
@@ -87,6 +89,19 @@ else
 	@$(CC) $(CCFLAGS) -o test_$(FILE) $(TEST_DIR)/$(FILE).o $(NAME)
 	@./test_$(FILE) && echo "$(FILE): PASS" || (echo "$(FILE): FAIL"; exit 1)
 	@rm -f test_$(FILE)
+endif
+
+
+debug: $(NAME)
+ifndef FILE
+	@echo "Usage: make debug FILE=<filename_without_extension>"
+	@echo "Example: make debug FILE=strlen"
+	@echo "Available test files: $(TEST_FILES:.s=)"
+else
+	@echo "Building test object for $(FILE)..."
+	@$(NASM) $(NASMFLAGS) -o $(TEST_DIR)/$(FILE).o $(TEST_DIR)/$(FILE).s
+	@echo "Linking and running $(FILE) test..."
+	@$(CC) $(CCFLAGS) -o test_$(FILE) $(TEST_DIR)/$(FILE).o $(NAME)
 endif
 
 # Clean object files
