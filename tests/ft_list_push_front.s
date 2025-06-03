@@ -1,11 +1,11 @@
 %include "libasm.inc"
 
 section .data
+  test_header db "=== Testing ft_list_push_front ===", 0
   str1 db "First", 0
   str2 db "Second", 0  
   str3 db "Third", 0
   str4 db "Fourth", 0
-  test_msg db "Testing ft_list_push_front and ft_list_print:", 0
 
 section .bss
   list_head resq 1               ; Reserve space for list head pointer
@@ -21,13 +21,11 @@ main:
 
   push rbp
   mov rbp, rsp
-  sub rsp, 16
 
-  ; Print test message
-  lea rdi, [rel test_msg]
+  ; Print test header
+  lea rdi, [rel test_header]
   call puts wrt ..plt
-
-
+  
   ; Initialize list head to NULL
   mov qword [rel list_head], 0   ; Use RIP-relative addressing
   

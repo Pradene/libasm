@@ -4,6 +4,7 @@ NAME := libasm.a
 # Source files (just names, no paths)
 SRC_FILES := ft_strcpy.s \
 			ft_list_size.s \
+			ft_list_sort.s \
 			ft_list_print.s \
 			ft_list_push_front.s \
 			ft_strdup.s \
@@ -25,7 +26,9 @@ OBJS := $(addprefix $(OBJS_DIR)/, $(SRC_FILES:.s=.o))
 TEST_DIR := tests
 TEST_FILES := ft_atoi_base.s \
 			ft_strlen.s \
-			ft_list_print.s \
+			ft_list_size.s \
+			ft_list_sort.s \
+			ft_list_push_front.s \
 			ft_strcpy.s \
 			ft_strcmp.s \
 			ft_strdup.s \
@@ -64,16 +67,15 @@ $(OBJS_DIR):
 
 # Test all - compile and run all test programs
 test-all: $(NAME) $(TEST_OBJS)
-	@echo
 	@echo "Running all tests..."
 	@for test_file in $(TEST_FILES:.s=); do \
-		echo "Testing $$test_file..."; \
+		echo && \
 		$(CC) $(CCFLAGS) -o test_$$test_file $(TEST_DIR)/$$test_file.o $(NAME) && \
 		./test_$$test_file && \
-		echo "$$test_file: PASS" || echo "$$test_file: FAIL"; \
-		echo ; \
+		echo "$$test_file: PASS" || echo "$$test_file: FAIL" && \
 		rm -f test_$$test_file; \
 	done
+	@echo
 	@echo "All tests completed."
 
 # Parameterized test rule - Usage: make test FILE=strlen
