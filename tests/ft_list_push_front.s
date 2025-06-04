@@ -1,61 +1,212 @@
 %include "libasm.inc"
 
 section .data
-  test_header db "=== Testing ft_list_push_front ===", 0
-  str1 db "First", 0
-  str2 db "Second", 0  
-  str3 db "Third", 0
-  str4 db "Fourth", 0
+    ; Test strings
+    str1            db "First", 0
+    str2            db "Second", 0  
+    str3            db "Third", 0
+    str4            db "Fourth", 0
+    
+    ; Test result messages
+    test_header     db "=== Testing ft_list_push_front ===", 10, 0
+    test1_desc      db "Test 1 - Push to empty list: ", 0
+    test2_desc      db "Test 2 - Push second element: ", 0
+    test3_desc      db "Test 3 - Push third element: ", 0
+    test4_desc      db "Test 4 - Push fourth element: ", 0
+    test5_desc      db "Test 5 - Final list order: ", 0
+    pass_msg        db "PASS", 10, 0
+    fail_msg        db "FAIL", 10, 0
+    newline         db 10, 0
 
 section .bss
-  list_head resq 1               ; Reserve space for list head pointer
+    list_head       resq 1          ; Reserve space for list head pointer
 
 section .text
-  global main
-  extern ft_list_push_front
-  extern ft_list_print
-  extern puts
-  extern exit
+    global main
+    extern ft_list_push_front
+    extern ft_list_size
+    extern ft_strcmp
 
 main:
+    ; Print test header
+    mov rax, 1
+    mov rdi, 1
+    lea rsi, [rel test_header]
+    mov rdx, 36
+    syscall
+    
+    ; Initialize list head to NULL
+    mov qword [rel list_head], 0
+    
+    ; Run all tests
+    call test1
+    call test2
+    call test3
+    call test4
+    call test5
+    
+    ; Exit program
+    mov rax, 60
+    mov rdi, 0
+    syscall
 
-  push rbp
-  mov rbp, rsp
+; Helper function to print PASS
+print_pass:
+    push rax
+    push rdi
+    push rsi
+    push rdx
+    
+    mov rax, 1
+    mov rdi, 1
+    lea rsi, [rel pass_msg]
+    mov rdx, 5
+    syscall
+    
+    pop rdx
+    pop rsi
+    pop rdi
+    pop rax
+    ret
 
-  ; Print test header
-  lea rdi, [rel test_header]
-  call puts wrt ..plt
-  
-  ; Initialize list head to NULL
-  mov qword [rel list_head], 0   ; Use RIP-relative addressing
-  
-  ; Push "Fourth" (will be last in output since we're pushing to front)
-  lea rdi, [rel list_head]       ; address of head pointer (RIP-relative)
-  lea rsi, [rel str4]            ; "Fourth" (RIP-relative)
-  call ft_list_push_front
-  
-  ; Push "Third"
-  lea rdi, [rel list_head]       ; RIP-relative
-  lea rsi, [rel str3]            ; "Third" (RIP-relative)
-  call ft_list_push_front
-  
-  ; Push "Second" 
-  lea rdi, [rel list_head]       ; RIP-relative
-  lea rsi, [rel str2]            ; "Second" (RIP-relative)
-  call ft_list_push_front
-  
-  ; Push "First" (will be first in output)
-  lea rdi, [rel list_head]       ; RIP-relative
-  lea rsi, [rel str1]            ; "First" (RIP-relative)
-  call ft_list_push_front
-  
-  ; Print the entire list
-  mov rdi, [rel list_head]       ; pass head pointer value (RIP-relative)
-  call ft_list_print
+; Helper function to print FAIL
+print_fail:
+    push rax
+    push rdi
+    push rsi
+    push rdx
+    
+    mov rax, 1
+    mov rdi, 1
+    lea rsi, [rel fail_msg]
+    mov rdx, 5
+    syscall
+    
+    pop rdx
+    pop rsi
+    pop rdi
+    pop rax
+    ret
 
-  mov rsp, rbp
-  pop rbp
-  
-  mov rax, 60
-  xor rdi, rdi
-  syscall
+test1:
+    ; Print test message
+    mov rax, 1
+    mov rdi, 1
+    lea rsi, [rel test1_desc]
+    mov rdx, 30
+    syscall
+    
+    ; Push "Fourth" to empty list
+    lea rdi, [rel list_head]
+    lea rsi, [rel str4]
+    call ft_list_push_front
+    
+    ; Check if list is no longer empty (size should be 1)
+    mov rdi, [rel list_head]
+    call ft_list_size
+    cmp rax, 1
+    je .pass
+    call print_fail
+    ret
+.pass:
+    call print_pass
+    ret
+
+test2:
+    ; Print test message
+    mov rax, 1
+    mov rdi, 1
+    lea rsi, [rel test2_desc]
+    mov rdx, 30
+    syscall
+    
+    ; Push "Third"
+    lea rdi, [rel list_head]
+    lea rsi, [rel str3]
+    call ft_list_push_front
+    
+    ; Check if size is now 2
+    mov rdi, [rel list_head]
+    call ft_list_size
+    cmp rax, 2
+    je .pass
+    call print_fail
+    ret
+.pass:
+    call print_pass
+    ret
+
+test3:
+    ; Print test message
+    mov rax, 1
+    mov rdi, 1
+    lea rsi, [rel test3_desc]
+    mov rdx, 29
+    syscall
+    
+    ; Push "Second"
+    lea rdi, [rel list_head]
+    lea rsi, [rel str2]
+    call ft_list_push_front
+    
+    ; Check if size is now 3
+    mov rdi, [rel list_head]
+    call ft_list_size
+    cmp rax, 3
+    je .pass
+    call print_fail
+    ret
+.pass:
+    call print_pass
+    ret
+
+test4:
+    ; Print test message
+    mov rax, 1
+    mov rdi, 1
+    lea rsi, [rel test4_desc]
+    mov rdx, 30
+    syscall
+    
+    ; Push "First" (will be at front)
+    lea rdi, [rel list_head]
+    lea rsi, [rel str1]
+    call ft_list_push_front
+    
+    ; Check if size is now 4
+    mov rdi, [rel list_head]
+    call ft_list_size
+    cmp rax, 4
+    je .pass
+    call print_fail
+    ret
+.pass:
+    call print_pass
+    ret
+
+test5:
+    ; Print test message
+    mov rax, 1
+    mov rdi, 1
+    lea rsi, [rel test5_desc]
+    mov rdx, 28
+    syscall
+    
+    ; Verify the list head contains the last pushed element ("First")
+    ; This tests that push_front actually puts new elements at the front
+    mov rdi, [rel list_head]
+    test rdi, rdi                   ; Check if head is not NULL
+    jz .fail
+    
+    ; Get the content pointer from the first node
+    mov rdi, [rdi + s_list.content] ; rdi = head->content
+    lea rsi, [rel str1]             ; rsi = "First"
+    call ft_strcmp
+    cmp rax, 0
+    je .pass
+.fail:
+    call print_fail
+    ret
+.pass:
+    call print_pass
+    ret

@@ -45,11 +45,11 @@ is_base_valid:
   jmp .loop
 
 .check_invalid_character:
-  cmp byte [rbp - 256 + 32], 1
+  cmp byte [rbp - 256 + 32], 1 ; 32 == SPACE
   je .ko
-  cmp byte [rbp - 256 + 43], 1
+  cmp byte [rbp - 256 + 43], 1 ; 43 == '+'
   je .ko
-  cmp byte [rbp - 256 + 45], 1
+  cmp byte [rbp - 256 + 45], 1 ; 45 == '-'
   je .ko
 
   jmp .ok
