@@ -35,14 +35,14 @@ section .data
 section .text
     global main
     extern ft_strcmp
+    extern ft_write
 
 main:
     ; Print header
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel header_msg]
     mov rdx, header_len
-    syscall
+    call ft_write
 
     call test1
     call test2
@@ -61,11 +61,10 @@ print_pass:
     push rsi
     push rdx
     
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel pass_msg]
     mov rdx, 5
-    syscall
+    call ft_write
     
     pop rdx
     pop rsi
@@ -80,11 +79,10 @@ print_fail:
     push rsi
     push rdx
     
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel fail_msg]
     mov rdx, 5
-    syscall
+    call ft_write
     
     pop rdx
     pop rsi
@@ -93,11 +91,10 @@ print_fail:
     ret
 
 test1:
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test1_msg]
     mov rdx, test1_len
-    syscall
+    call ft_write
 
     lea rdi, [rel str1_empty]
     lea rsi, [rel str2_empty]
@@ -111,11 +108,10 @@ test1:
     ret
 
 test2:
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test2_msg]
     mov rdx, test2_len
-    syscall
+    call ft_write
 
     lea rdi, [rel str1_equal]
     lea rsi, [rel str2_equal]
@@ -129,11 +125,10 @@ test2:
     ret
 
 test3:
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test3_msg]
     mov rdx, test3_len
-    syscall
+    call ft_write
 
     lea rdi, [rel str1_less]
     lea rsi, [rel str2_less]
@@ -147,11 +142,10 @@ test3:
     ret
 
 test4:
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test4_msg]
     mov rdx, test4_len
-    syscall
+    call ft_write
 
     lea rdi, [rel str1_greater]
     lea rsi, [rel str2_greater]
@@ -165,11 +159,10 @@ test4:
     ret
 
 test5:
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test5_msg]
     mov rdx, test5_len
-    syscall
+    call ft_write
 
     lea rdi, [rel str1_case]
     lea rsi, [rel str2_case]

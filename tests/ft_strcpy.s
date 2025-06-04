@@ -29,14 +29,14 @@ section .text
     global main
     extern ft_strcpy
     extern ft_strcmp
+    extern ft_write
 
 main:
     ; Print test header
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test_header]  ; Use RIP-relative addressing
     mov rdx, 27
-    syscall
+    call ft_write
 
     ; Run all tests
     call test1
@@ -57,11 +57,10 @@ print_pass:
     push rsi
     push rdx
     
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel pass_msg]     ; Use RIP-relative addressing
     mov rdx, 5
-    syscall
+    call ft_write
     
     pop rdx
     pop rsi
@@ -76,11 +75,10 @@ print_fail:
     push rsi
     push rdx
     
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel fail_msg]     ; Use RIP-relative addressing
     mov rdx, 5
-    syscall
+    call ft_write
     
     pop rdx
     pop rsi
@@ -90,11 +88,10 @@ print_fail:
 
 test1:
     ; Print test message
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test1_msg]    ; Use RIP-relative addressing
     mov rdx, 24
-    syscall
+    call ft_write
     
     ; Clear destination buffer
     lea rax, [rel dest_buffer1] ; Use RIP-relative addressing
@@ -126,11 +123,10 @@ test1:
 
 test2:
     ; Print test message
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test2_msg]    ; Use RIP-relative addressing
     mov rdx, 24
-    syscall
+    call ft_write
     
     ; Clear destination buffer
     mov rcx, 10
@@ -164,11 +160,10 @@ test2:
 
 test3:
     ; Print test message
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test3_msg]    ; Use RIP-relative addressing
     mov rdx, 25
-    syscall
+    call ft_write
     
     ; Clear destination buffer
     mov rcx, 50
@@ -202,11 +197,10 @@ test3:
 
 test4:
     ; Print test message
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test4_msg]    ; Use RIP-relative addressing
     mov rdx, 23
-    syscall
+    call ft_write
     
     ; Clear destination buffer
     mov rcx, 100
@@ -240,11 +234,10 @@ test4:
 
 test5:
     ; Print test message
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test5_msg]    ; Use RIP-relative addressing
     mov rdx, 39
-    syscall
+    call ft_write
     
     ; Clear destination buffer
     mov rcx, 100

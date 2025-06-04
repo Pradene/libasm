@@ -40,11 +40,11 @@ TEST_OBJS := $(addprefix $(TEST_DIR)/, $(TEST_FILES:.s=.o))
 
 # Tools and flags
 NASM = nasm
-NASMFLAGS = -f elf64 -DPIC -I incs/
+NASMFLAGS = -f elf64 -I incs/
 AR = ar
 ARFLAGS = rcs
 CC = gcc
-CCFLAGS = -Wall -Wextra -Werror -fPIE -pie -g
+CCFLAGS = -Wall -Wextra -Werror -g
 
 # Default target
 all: $(NAME)

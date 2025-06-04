@@ -26,15 +26,15 @@ section .data
 section .text
     global main
     extern ft_read
+    extern ft_write
     extern __errno_location
 
 main:
     ; Print header
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test_header]
     mov rdx, test_header_len
-    syscall
+    call ft_write
 
     ; Create test file
     mov rax, 2
@@ -48,8 +48,7 @@ main:
     mov rdi, rax
     lea rsi, [rel file_content]
     mov rdx, content_len
-    mov rax, 1
-    syscall
+    call ft_write
 
     ; Close file
     mov rax, 3
@@ -82,19 +81,17 @@ main:
 
 ; Helper functions
 print_pass:
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel pass_msg]
     mov rdx, pass_len
-    syscall
+    call ft_write
     ret
 
 print_fail:
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel fail_msg]
     mov rdx, fail_len
-    syscall
+    call ft_write
     ret
 
 reset_errno:
@@ -105,11 +102,10 @@ reset_errno:
 ; Test cases
 test_read_ok:
     ; Print description
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel read_ok_desc]
     mov rdx, read_ok_len
-    syscall
+    call ft_write
 
     ; Read from file using ft_read
     mov rdi, [rel valid_fd]
@@ -136,11 +132,10 @@ test_read_ok:
 
 test_read_err:
     ; Print description
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel read_err_desc]
     mov rdx, read_err_len
-    syscall
+    call ft_write
 
     call reset_errno
 

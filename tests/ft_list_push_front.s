@@ -26,14 +26,14 @@ section .text
     extern ft_list_push_front
     extern ft_list_size
     extern ft_strcmp
+    extern ft_write
 
 main:
     ; Print test header
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test_header]
     mov rdx, 36
-    syscall
+    call ft_write
     
     ; Initialize list head to NULL
     mov qword [rel list_head], 0
@@ -57,11 +57,10 @@ print_pass:
     push rsi
     push rdx
     
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel pass_msg]
     mov rdx, 5
-    syscall
+    call ft_write
     
     pop rdx
     pop rsi
@@ -76,11 +75,10 @@ print_fail:
     push rsi
     push rdx
     
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel fail_msg]
     mov rdx, 5
-    syscall
+    call ft_write
     
     pop rdx
     pop rsi
@@ -90,11 +88,10 @@ print_fail:
 
 test1:
     ; Print test message
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test1_desc]
     mov rdx, 30
-    syscall
+    call ft_write
     
     ; Push "Fourth" to empty list
     lea rdi, [rel list_head]
@@ -114,11 +111,10 @@ test1:
 
 test2:
     ; Print test message
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test2_desc]
     mov rdx, 30
-    syscall
+    call ft_write
     
     ; Push "Third"
     lea rdi, [rel list_head]
@@ -138,11 +134,10 @@ test2:
 
 test3:
     ; Print test message
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test3_desc]
     mov rdx, 29
-    syscall
+    call ft_write
     
     ; Push "Second"
     lea rdi, [rel list_head]
@@ -162,11 +157,10 @@ test3:
 
 test4:
     ; Print test message
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test4_desc]
     mov rdx, 30
-    syscall
+    call ft_write
     
     ; Push "First" (will be at front)
     lea rdi, [rel list_head]
@@ -186,11 +180,10 @@ test4:
 
 test5:
     ; Print test message
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test5_desc]
     mov rdx, 28
-    syscall
+    call ft_write
     
     ; Verify the list head contains the last pushed element ("First")
     ; This tests that push_front actually puts new elements at the front

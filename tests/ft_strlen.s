@@ -25,6 +25,7 @@ section .data
 section .text
     global main
     extern ft_strlen
+    extern ft_write
 
 main:
     ; Print test header
@@ -32,7 +33,7 @@ main:
     mov rdi, 1
     lea rsi, [rel test_header]
     mov rdx, 27
-    syscall
+    call ft_write
     
     ; Run all tests
     call test1
@@ -53,11 +54,10 @@ print_pass:
     push rsi
     push rdx
     
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel pass_msg]
     mov rdx, 5
-    syscall
+    call ft_write
     
     pop rdx
     pop rsi
@@ -72,11 +72,10 @@ print_fail:
     push rsi
     push rdx
     
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel fail_msg]
     mov rdx, 5
-    syscall
+    call ft_write
     
     pop rdx
     pop rsi
@@ -86,11 +85,10 @@ print_fail:
 
 test1:
     ; Print test message
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test1_desc]
     mov rdx, 24
-    syscall
+    call ft_write
     
     ; Test empty string
     lea rdi, [rel test1_str]
@@ -105,11 +103,10 @@ test1:
 
 test2:
     ; Print test message
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test2_desc]
     mov rdx, 24
-    syscall
+    call ft_write
     
     ; Test short string
     lea rdi, [rel test2_str]
@@ -124,11 +121,10 @@ test2:
 
 test3:
     ; Print test message
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test3_desc]
     mov rdx, 25
-    syscall
+    call ft_write
     
     ; Test medium string
     lea rdi, [rel test3_str]
@@ -143,11 +139,10 @@ test3:
 
 test4:
     ; Print test message
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test4_desc]
     mov rdx, 23
-    syscall
+    call ft_write
     
     ; Test long string
     lea rdi, [rel test4_str]
@@ -162,11 +157,10 @@ test4:
 
 test5:
     ; Print test message
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test5_desc]
     mov rdx, 39
-    syscall
+    call ft_write
 
     ; Test string with numbers and symbols
     lea rdi, [rel test5_str]

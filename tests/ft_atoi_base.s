@@ -67,14 +67,14 @@ section .data
 section .text
     global main
     extern ft_atoi_base
+    extern ft_write
 
 main:
     ; Print header
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test_header]
     mov rdx, test_header_len
-    syscall
+    call ft_write
 
     ; Run tests
     call test1
@@ -94,29 +94,26 @@ main:
 
 ; Helper functions
 print_pass:
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel pass_msg]
     mov rdx, pass_len
-    syscall
+    call ft_write
     ret
 
 print_fail:
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel fail_msg]
     mov rdx, fail_len
-    syscall
+    call ft_write
     ret
 
 ; Test functions
 test1:
     ; Print test description
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test1_desc]
     mov rdx, test1_desc_len
-    syscall
+    call ft_write
 
     ; Run test
     lea rdi, [rel test1_str]
@@ -136,11 +133,10 @@ test1:
     ret
 
 test2:
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test2_desc]
     mov rdx, test2_desc_len
-    syscall
+    call ft_write
 
     lea rdi, [rel test2_str]
     lea rsi, [rel test2_base]
@@ -157,11 +153,10 @@ test2:
     ret
 
 test3:
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test3_desc]
     mov rdx, test3_desc_len
-    syscall
+    call ft_write
 
     lea rdi, [rel test3_str]
     lea rsi, [rel test3_base]
@@ -178,11 +173,10 @@ test3:
     ret
 
 test4:
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test4_desc]
     mov rdx, test4_desc_len
-    syscall
+    call ft_write
 
     lea rdi, [rel test4_str]
     lea rsi, [rel test4_base]
@@ -199,11 +193,10 @@ test4:
     ret
 
 test5:
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test5_desc]
     mov rdx, test5_desc_len
-    syscall
+    call ft_write
 
     lea rdi, [rel test5_str]
     lea rsi, [rel test5_base]
@@ -220,11 +213,10 @@ test5:
     ret
 
 test6:
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test6_desc]
     mov rdx, test6_desc_len
-    syscall
+    call ft_write
 
     lea rdi, [rel test6_str]
     lea rsi, [rel test6_base]
@@ -241,11 +233,10 @@ test6:
     ret
 
 test7:
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test7_desc]
     mov rdx, test7_desc_len
-    syscall
+    call ft_write
 
     lea rdi, [rel test7_str]
     lea rsi, [rel test7_base]
@@ -262,11 +253,10 @@ test7:
     ret
 
 test8:
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test8_desc]
     mov rdx, test8_desc_len
-    syscall
+    call ft_write
 
     lea rdi, [rel test8_str]
     lea rsi, [rel test8_base]
@@ -283,11 +273,10 @@ test8:
     ret
 
 test9:
-    mov rax, 1
     mov rdi, 1
     lea rsi, [rel test9_desc]
     mov rdx, test9_desc_len
-    syscall
+    call ft_write
 
     lea rdi, [rel test9_str]
     lea rsi, [rel test9_base]
